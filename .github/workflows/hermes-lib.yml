@@ -1,0 +1,37 @@
+name: Build and Deploy NodeJS Libraries
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    defaults:
+      run:
+        working-directory: ./hermes-lib
+    
+    steps:
+      - name: Checkout derrysmith/hermes repository
+        uses: actions/checkout@v2
+
+      - name: Configure npm package publishing
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@derrysmith'
+      
+      - name: CI/CD authentication
+        run: npm ci
+
+      - name: Publish hermes-lib libraries
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
