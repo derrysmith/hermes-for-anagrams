@@ -15,7 +15,7 @@ public class DictionaryUtility : IDictionaryUtility
 	{
 		// load words from text file
 		var dictionaryText = this.GetDictionaryFileText();
-		var dictionaryList = dictionaryText.Split(Environment.NewLine);
+		var dictionaryList = dictionaryText.Split("\r\n");
 
 		return this.CreateAnagramDictionary(dictionaryList);
 	}
