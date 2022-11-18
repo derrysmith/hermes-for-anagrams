@@ -1,11 +1,19 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Text;
+using Microsoft.Extensions.Logging;
 
 namespace Hermes.Words;
 
 /// <inheritdoc />
 public class DictionaryUtility : IDictionaryUtility
 {
+	private readonly ILogger _logger;
+
+	public DictionaryUtility(ILogger<DictionaryUtility> logger)
+	{
+		_logger = logger;
+	}
+
 	/// <inheritdoc />
 	public string CreateAnagramKey(string word)
 		=> string.Concat(word.OrderBy(c => c));
@@ -23,7 +31,9 @@ public class DictionaryUtility : IDictionaryUtility
 	private string GetDictionaryFileText()
 	{
 		var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+		_logger.LogDebug("executing assembly = {FullName}", assembly.FullName);
 		var filePath = $"{assembly.GetName().Name}.dictionary.txt";
+		_logger.LogDebug("file path to dictionary = {filePath}", filePath);
 
 		using var stream = assembly.GetManifestResourceStream(filePath);
 		var reader = new StreamReader(stream!);

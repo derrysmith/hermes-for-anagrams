@@ -1,4 +1,6 @@
-using System.Linq;
+using FakeItEasy;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -18,7 +20,9 @@ public class DictionaryServiceTests
 	{
 		// arrange
 		var text = "loasyuej";
-		var utility = new DictionaryUtility();
+		var loggerFactory = new NullLoggerFactory();
+		var logger = loggerFactory.CreateLogger<DictionaryUtility>();
+		var utility = new DictionaryUtility(logger);
 		var service = new DictionaryService(utility);
 		
 		// act
