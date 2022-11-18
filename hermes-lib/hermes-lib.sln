@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{6146EEBC-42E4-494A-BA07-9F94482D7C16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hermes.Words", "src\Hermes.Words\Hermes.Words.csproj", "{32FC0D60-B275-4B52-B98B-FA07AD8B07DF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{931761D6-80B9-43ED-99FE-CAB85555BFD6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hermes.Words.Tests", "test\Hermes.Words.Tests\Hermes.Words.Tests.csproj", "{3C7E39D3-80F2-480F-BBD4-AD976025C63C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{32FC0D60-B275-4B52-B98B-FA07AD8B07DF} = {6146EEBC-42E4-494A-BA07-9F94482D7C16}
+		{3C7E39D3-80F2-480F-BBD4-AD976025C63C} = {931761D6-80B9-43ED-99FE-CAB85555BFD6}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{32FC0D60-B275-4B52-B98B-FA07AD8B07DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32FC0D60-B275-4B52-B98B-FA07AD8B07DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32FC0D60-B275-4B52-B98B-FA07AD8B07DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32FC0D60-B275-4B52-B98B-FA07AD8B07DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C7E39D3-80F2-480F-BBD4-AD976025C63C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C7E39D3-80F2-480F-BBD4-AD976025C63C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C7E39D3-80F2-480F-BBD4-AD976025C63C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C7E39D3-80F2-480F-BBD4-AD976025C63C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
