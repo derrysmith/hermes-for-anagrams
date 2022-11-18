@@ -23,7 +23,8 @@ public class DictionaryUtility : IDictionaryUtility
 	{
 		// load words from text file
 		var dictionaryText = this.GetDictionaryFileText();
-		var dictionaryList = dictionaryText.Split("\r\n");
+		_logger.LogDebug("dictionary has a length of {0}", dictionaryText.Length);
+		var dictionaryList = dictionaryText.Split(Environment.NewLine);
 
 		return this.CreateAnagramDictionary(dictionaryList);
 	}
@@ -36,9 +37,11 @@ public class DictionaryUtility : IDictionaryUtility
 		_logger.LogDebug("file path to dictionary = {filePath}", filePath);
 
 		using var stream = assembly.GetManifestResourceStream(filePath);
-		var reader = new StreamReader(stream!);
 
-		return reader.ReadToEnd();
+		if (stream == null)
+			throw new ApplicationException($"Could not get manifest resource stream for {filePath}");
+		
+		return new StreamReader(stream).ReadToEnd();
 	}
 
 	private IDictionary<string, IEnumerable<string>> CreateAnagramDictionary(IEnumerable<string> dictionary)
