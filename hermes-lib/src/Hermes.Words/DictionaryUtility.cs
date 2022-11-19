@@ -1,19 +1,10 @@
-﻿using System.Runtime.CompilerServices;
-using System.Text;
-using Microsoft.Extensions.Logging;
+﻿using System.Text.Json;
 
 namespace Hermes.Words;
 
 /// <inheritdoc />
 public class DictionaryUtility : IDictionaryUtility
 {
-	private readonly ILogger _logger;
-
-	public DictionaryUtility(ILogger<DictionaryUtility> logger)
-	{
-		_logger = logger;
-	}
-
 	/// <inheritdoc />
 	public string CreateAnagramKey(string word)
 		=> string.Concat(word.OrderBy(c => c));
@@ -22,19 +13,16 @@ public class DictionaryUtility : IDictionaryUtility
 	public IDictionary<string, IEnumerable<string>> CreateAnagramDictionary()
 	{
 		// load words from text file
-		var dictionaryText = this.GetDictionaryFileText();
-		_logger.LogDebug("dictionary has a length of {0}", dictionaryText.Length);
-		var dictionaryList = dictionaryText.Split(Environment.NewLine);
+		var dictionaryJson = this.GetDictionaryFileJson();
+		var dictionaryHash = JsonSerializer.Deserialize<Dictionary<string, string>>(dictionaryJson);
 
-		return this.CreateAnagramDictionary(dictionaryList);
+		return this.CreateAnagramDictionary(dictionaryHash!.Keys);
 	}
 
-	private string GetDictionaryFileText()
+	private string GetDictionaryFileJson()
 	{
 		var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-		_logger.LogDebug("executing assembly = {FullName}", assembly.FullName);
-		var filePath = $"{assembly.GetName().Name}.dictionary.txt";
-		_logger.LogDebug("file path to dictionary = {filePath}", filePath);
+		var filePath = $"{assembly.GetName().Name}.dictionary.json";
 
 		using var stream = assembly.GetManifestResourceStream(filePath);
 

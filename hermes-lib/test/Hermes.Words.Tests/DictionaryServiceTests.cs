@@ -20,9 +20,7 @@ public class DictionaryServiceTests
 	{
 		// arrange
 		var text = "loasyuej";
-		var loggerFactory = new NullLoggerFactory();
-		var logger = loggerFactory.CreateLogger<DictionaryUtility>();
-		var utility = new DictionaryUtility(logger);
+		var utility = new DictionaryUtility();
 		var service = new DictionaryService(utility);
 		
 		// act
