@@ -12,13 +12,14 @@ public class DictionaryUtility : IDictionaryUtility
 	/// <inheritdoc />
 	public IDictionary<string, IEnumerable<string>> CreateAnagramDictionary()
 	{
-		// load words from text file
+		// load words from json file
 		var dictionaryJson = this.GetDictionaryFileJson();
 		var dictionaryHash = JsonSerializer.Deserialize<Dictionary<string, string>>(dictionaryJson);
 
 		return this.CreateAnagramDictionary(dictionaryHash!.Keys);
 	}
 
+	// TODO: find a better json dictionary, some words are missing
 	private string GetDictionaryFileJson()
 	{
 		var assembly = System.Reflection.Assembly.GetExecutingAssembly();

@@ -1,16 +1,12 @@
 using Hermes.Words;
-using MediatR;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddMediatR(typeof(Program));
 
 // Hermes.Words
 builder.Services.AddHermes();
 
+// Hermes.Api
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

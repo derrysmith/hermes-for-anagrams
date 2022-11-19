@@ -1,5 +1,5 @@
-using Hermes.Api.Anagrams.Routes;
-using MediatR;
+using Hermes.Api.Anagrams.Models;
+using Hermes.Words;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hermes.Api.Anagrams;
@@ -8,22 +8,21 @@ namespace Hermes.Api.Anagrams;
 [Produces("application/json")]
 public class AnagramsController : ControllerBase
 {
-	private readonly MediatR.IMediator _mediator;
+	private readonly IDictionaryService _service;
 
-	public AnagramsController(IMediator mediator)
+	public AnagramsController(IDictionaryService service)
 	{
-		_mediator = mediator;
+		_service = service;
 	}
 
 	[HttpGet]
-	public async Task<ActionResult<GetAnagramsRoute.Response>> GetAnagrams(
-		[FromQuery(Name = "q")] string text,
-		[FromQuery(Name = "min")] int? min,
-		[FromQuery(Name = "max")] int? max, CancellationToken cancellationToken)
+	public ActionResult<AnagramApiResponse> GetAnagrams(
+		[FromQuery] string text, [FromQuery] int? min, [FromQuery] int? max)
 	{
-		var getAnagramsRouteRequest = new GetAnagramsRoute.Request(text, min ?? 3, max ?? text.Length);
-		var getAnagramsRouteResponse = await _mediator.Send(getAnagramsRouteRequest, cancellationToken);
-
-		return this.StatusCode(getAnagramsRouteResponse.Status, getAnagramsRouteResponse);
+		var minLength = min ?? 3;
+		var maxLength = max ?? text.Length;
+		var anagrams = _service.GetAnagrams(text, minLength, maxLength);
+		
+		return this.Ok(new AnagramApiResponse(anagrams));
 	}
 }
