@@ -42,7 +42,7 @@ jobs:
         with:
           context: .
           file: hermes-api.dockerfile
-          tags: $IMAGE_NAME
+          tags: ${{ env.IMAGE_NAME }}
           push: true
           
   # deploy-image-to-gcr:
