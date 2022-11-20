@@ -41,8 +41,8 @@ jobs:
           tags: ${{ env.IMAGE_NAME }}
           push: true
           build-args: |
-            PACKAGE_FEED_USERNAME: ${{ github.repository_owner }}
-            PACKAGE_FEED_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+            PACKAGE_FEED_USERNAME=${{ github.repository_owner }}
+            PACKAGE_FEED_PASSWORD=${{ secrets.GITHUB_TOKEN }}
 
   # deploy-image-to-gcr:
   #   name: Deploy API Image to Google Cloud Run
