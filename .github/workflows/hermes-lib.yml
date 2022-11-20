@@ -1,4 +1,4 @@
-name: Build and Deploy Hermes Libraries
+name: Hermes Library CI/CD
 
 on:
   push:
@@ -10,7 +10,8 @@ on:
       - '!hermes-lib/**/*.md'
 
 jobs:
-  build-and-deploy:
+  deploy-packages-to-github:
+    name: Build and Deploy Libraries to GitHub Registry
     runs-on: ubuntu-latest
 
     defaults:
