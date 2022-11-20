@@ -2,5 +2,5 @@
 
 namespace Hermes.Api.Anagrams.Models;
 
-public record AnagramApiResponse(
+public record AnagramsApiResponse(
 	[property: JsonPropertyName("anagrams")] IEnumerable<string> Anagrams);

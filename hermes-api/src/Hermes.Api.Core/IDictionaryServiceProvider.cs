@@ -1,9 +1,9 @@
-﻿namespace Hermes.Words;
+﻿namespace Hermes.Api.Core;
 
 /// <summary>
 /// 
 /// </summary>
-public interface IDictionaryUtility
+public interface IDictionaryServiceProvider
 {
 	/// <summary>
 	/// 
@@ -11,10 +11,10 @@ public interface IDictionaryUtility
 	/// <param name="word"></param>
 	/// <returns></returns>
 	string CreateAnagramKey(string word);
-
+	
 	/// <summary>
 	/// 
 	/// </summary>
 	/// <returns></returns>
-	IDictionary<string, IEnumerable<string>> CreateAnagramDictionary();
+	IDictionary<string, IEnumerable<string>> CreateAnagrams();
 }

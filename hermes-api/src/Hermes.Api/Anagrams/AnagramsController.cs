@@ -1,5 +1,5 @@
-using Hermes.Api.Anagrams.Models;
-using Hermes.Words;
+﻿using Hermes.Api.Anagrams.Models;
+using Hermes.Api.Core;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hermes.Api.Anagrams;
@@ -16,13 +16,12 @@ public class AnagramsController : ControllerBase
 	}
 
 	[HttpGet]
-	public ActionResult<AnagramApiResponse> GetAnagrams(
+	public ActionResult<AnagramsApiResponse> GetAnagrams(
 		[FromQuery] string text, [FromQuery] int? min, [FromQuery] int? max)
 	{
-		var minLength = min ?? 3;
-		var maxLength = max ?? text.Length;
-		var anagrams = _service.GetAnagrams(text, minLength, maxLength);
-		
-		return this.Ok(new AnagramApiResponse(anagrams));
+		var anagrams = _service.GetAnagrams(text, min ?? 3, max ?? text.Length);
+		var response = new AnagramsApiResponse(anagrams);
+
+		return this.Ok(response);
 	}
 }

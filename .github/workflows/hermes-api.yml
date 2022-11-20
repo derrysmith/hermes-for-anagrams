@@ -5,9 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/hermes-api.yml'
-      - 'hermes-api/**/*'
-      - '!hermes-api/**/*.md'
+      - 'path-does-not-exist'
     
 env:
   IMAGE_NAME: derrysmith/hermes-api

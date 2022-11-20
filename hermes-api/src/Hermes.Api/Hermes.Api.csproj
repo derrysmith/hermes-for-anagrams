@@ -8,12 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Hermes.Words" Version="1.0.4" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers" />
+      <ProjectReference Include="..\Hermes.Api.Core\Hermes.Api.Core.csproj" />
+      <ProjectReference Include="..\Hermes.Api.Data\Hermes.Api.Data.csproj" />
     </ItemGroup>
 
 </Project>

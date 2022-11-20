@@ -1,6 +1,43 @@
 # hermes
 
+A set of client/server applications to help with word games such as Wordle&reg;, Scrabble&reg;, crossword puzzles, and jumbles.
+
+<!-- badges -->
+
+<!-- overview -->
+<!-- install -->
+
 ```
+> derrysmith/hermes
+	> hermes-api
+		> src
+			> Hermes.Api
+			> Hermes.Api.Core
+			> Hermes.Api.Data
+		> test
+			> Hermes.Tests.Api
+			> Hermes.Tests.Api.Core
+			> Hermes.Tests.Api.Data
+	> hermes-cli
+		> src
+			> Hermes.CLI
+			> Hermes.CLI.Core
+			> Hermes.CLI.Data
+	> client
+		> hermes-app
+		> hermes-cli
+			> src
+				> Hermes.CLI
+			> test
+				> Hermes.CLI.Tests
+		> hermes-ext
+		> hermes-web
+	> server
+		> hermes-api
+			> src
+				> Hermes.Api
+			> test
+				> Hermes.Api.Tests
 > derrysmith/hermes
 	> hermes-api
 		> src

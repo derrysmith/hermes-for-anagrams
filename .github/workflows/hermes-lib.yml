@@ -5,9 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/hermes-lib.yml'
-      - 'hermes-lib/**/*'
-      - '!hermes-lib/**/*.md'
+      - 'path-does-not-exist'
 
 jobs:
   deploy-packages-to-github:
