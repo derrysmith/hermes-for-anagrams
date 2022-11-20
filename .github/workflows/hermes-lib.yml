@@ -1,4 +1,4 @@
-name: Hermes Library CI/CD
+name: Hermes Packages CI/CD
 
 on:
   push:
