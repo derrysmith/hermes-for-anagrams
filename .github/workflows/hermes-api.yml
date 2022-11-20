@@ -44,7 +44,7 @@ jobs:
         with:
           context: ./hermes-api
           file: ./hermes-api/hermes-api.dockerfile
-          tags: ${{ env.IMAGE_NAME }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           push: true
           build-args: |
             PACKAGE_FEED_USERNAME=${{ github.repository_owner }}
