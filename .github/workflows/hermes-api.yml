@@ -12,7 +12,7 @@ on:
 defaults:
   run:
     working-directory: ./hermes-api
-
+    
 env:
   IMAGE_NAME: derrysmith/hermes-api
   REGISTRY: ghcr.io
@@ -40,7 +40,7 @@ jobs:
       - name: Build docker image
         uses: docker/build-push-action@v3
         with:
-          context: .
+          context: ./hermes-api
           file: hermes-api.dockerfile
           tags: ${{ env.IMAGE_NAME }}
           push: true
