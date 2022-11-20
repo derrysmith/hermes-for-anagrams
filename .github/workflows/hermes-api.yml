@@ -8,10 +8,6 @@ on:
       - '.github/workflows/hermes-api.yml'
       - 'hermes-api/**/*'
       - '!hermes-api/**/*.md'
-
-defaults:
-  run:
-    working-directory: ./hermes-api
     
 env:
   IMAGE_NAME: derrysmith/hermes-api
@@ -41,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ./hermes-api
-          file: hermes-api.dockerfile
+          file: ./hermes-api/hermes-api.dockerfile
           tags: ${{ env.IMAGE_NAME }}
           push: true
           
