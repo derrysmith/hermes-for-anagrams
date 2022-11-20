@@ -40,7 +40,10 @@ jobs:
           file: ./hermes-api/hermes-api.dockerfile
           tags: ${{ env.IMAGE_NAME }}
           push: true
-          
+          build-args: |
+            PACKAGE_FEED_USERNAME: ${{ github.repository_owner }}
+            PACKAGE_FEED_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+
   # deploy-image-to-gcr:
   #   name: Deploy API Image to Google Cloud Run
   #   runs-on: ubuntu-latest
