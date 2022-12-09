@@ -8,6 +8,7 @@ on:
 env:
   API_IMAGE_NAME: ${{ github.repository_owner }}/hermes-api
   WEB_IMAGE_NAME: ${{ github.repository_owner }}/hermes-web
+  REGION: us-west1
   REGISTRY: ghcr.io
 
 jobs:
@@ -76,7 +77,37 @@ jobs:
           labels: ${{ steps.webmeta.outputs.labels }}
           push: true
 
-  # deploy-images-to-gcr:
-  #   name: Deploy images to Google Cloud Run
-  #   runs-on: ubuntu-latest
-  #   needs: deploy-images-to-github
+  deploy-images-to-gcr:
+    name: Deploy images to Google Cloud Run
+    runs-on: ubuntu-latest
+    needs: deploy-images-to-github
+
+    steps:
+      # - name: Configure GCR
+      #   uses: google-github-actions/setup-gcloud
+      #   with:
+      #     project_id: ${{ secrets.GCP_PROJECT_ID }}
+      #     service_account_email: ${{ secrets.GCP_SVC_ACCOUNT_EMAIL }}
+      #     service_account_key: ${{ secrets.GCP_SVC_ACCOUNT_KEY }}
+      #     export_default_credentials: true
+      
+      - name: Authenticate to GCR
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_SVC_ACCOUNT_KEY }}
+
+      - name: Deploy Api Container to GCR
+        uses: google-github-actions/deploy-cloudrun
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.API_IMAGE_NAME }}
+          region: ${{ env.REGION }}
+          service: hermes-api
+          flags: --port=8080 --allow-unauthenticated --platform=managed
+      
+      - name: Deploy Web Container to GCR
+        uses: google-github-actions/deploy-cloudrun
+        with:
+          image: ${{ env.REGISTRY }}/${{ env.WEB_IMAGE_NAME }}
+          region: ${{ env.REGION }}
+          service: hermes-web
+          flags: --port=8080 --allow-unauthenticated --platform=managed
