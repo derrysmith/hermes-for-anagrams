@@ -61,7 +61,8 @@ jobs:
       - name: Build and Push Api Image to GitHub Container Registry
         uses: docker/build-push-action@v3
         with:
-          context: ./src/Hermes.Host.Api
+          context: .
+          file: hermes-api.dockerfile
           tags: ${{ steps.apimeta.outputs.tags }}
           labels: ${{ steps.apimeta.outputs.labels }}
           push: true
@@ -69,7 +70,8 @@ jobs:
       - name: Build and Push Web Image to GitHub Container Registry
         uses: docker/build-push-action@v3
         with:
-          context: ./src/Hermes.Host.Web
+          context: .
+          file: hermes-web.dockerfile
           tags: ${{ steps.webmeta.outputs.tags }}
           labels: ${{ steps.webmeta.outputs.labels }}
           push: true
