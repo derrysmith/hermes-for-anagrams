@@ -6,60 +6,69 @@ on:
       - main
 
 env:
-  API_IMAGE_NAME: ${{ github.repository_owner }}/hermes-api
-  WEB_IMAGE_NAME: ${{ github.repository_owner }}/hermes-web
+  API_SERVICE: hermes-api
+  WEB_SERVICE: hermes-web
   REGION: us-west1
-  REGISTRY: ghcr.io
+  REGISTRY: gcr.io
+  API_IMAGE_NAME: ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/derrysmith/${{ env.API_SERVICE }}
+  WEB_IMAGE_NAME: ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/derrysmith/${{ env.WEB_SERVICE }}
 
 jobs:
-  deploy-images-to-github:
-    name: Deploy to GitHub Container Registry
+  build-deploy-to-google:
+    name: Build and Deploy Images to Google Cloud
     runs-on: ubuntu-latest
     
     permissions:
       contents: read
       packages: write
-    
+
     steps:
-      - name: Checkout Repository
+      - name: checkout repository
         uses: actions/checkout@v3
+
+      - name: authenticate to google cloud
+        id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: access_token
+          credentials_json: ${{ secrets.GCP_SVC_ACCOUNT_KEY }}
       
-      - name: Configure QEMU
+      - name: configure qemu
         uses: docker/setup-qemu-action@v2
 
-      - name: Configure Buildx
+      - name: configure buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Authenticate to GitHub Container Registry
+      - name: authenticate docker to google container registry
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: oauth2accesstoken
+          password: '${{ steps.auth.outputs.access_token }}'
 
-      - name: Extract Metadata for Docker
+      - name: extract api metadata
         id: apimeta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.API_IMAGE_NAME }}
+          images: ${{ env.API_IMAGE_NAME }}
           # generate Docker tags based on the following events/attributes
           # just generate "latest", and sha tags for now
           tags: |
             type=sha
             type=raw,value=latest,enable={{is_default_branch}}
 
-      - name: Extract Metadata for Docker
+      - name: extract web metadata
         id: webmeta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.WEB_IMAGE_NAME }}
+          images: ${{ env.WEB_IMAGE_NAME }}
           # generate Docker tags based on the following events/attributes
           # just generate "latest", and sha tags for now
           tags: |
             type=sha
             type=raw,value=latest,enable={{is_default_branch}}
       
-      - name: Build and Push Api Image to GitHub Container Registry
+      - name: build/deploy api to google container registry
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -68,7 +77,7 @@ jobs:
           labels: ${{ steps.apimeta.outputs.labels }}
           push: true
       
-      - name: Build and Push Web Image to GitHub Container Registry
+      - name: build/deploy web to google container registry
         uses: docker/build-push-action@v3
         with:
           context: .
@@ -77,29 +86,111 @@ jobs:
           labels: ${{ steps.webmeta.outputs.labels }}
           push: true
 
-  deploy-images-to-gcr:
-    name: Deploy images to Google Cloud Run
-    runs-on: ubuntu-latest
-    needs: deploy-images-to-github
-
-    steps:
-      - name: Authenticate to GCR
-        uses: google-github-actions/auth@v1
+      - name: deploy api to google cloud run
+        uses: google-github-actions/deploy-cloudrun@v1
         with:
-          credentials_json: ${{ secrets.GCP_SVC_ACCOUNT_KEY }}
-
-      - name: Deploy Api Container to GCR
-        uses: google-github-actions/deploy-cloudrun
-        with:
-          image: ${{ env.REGISTRY }}/${{ env.API_IMAGE_NAME }}
+          image: ${{ env.API_IMAGE_NAME }}
           region: ${{ env.REGION }}
           service: hermes-api
           flags: --port=8080 --allow-unauthenticated --platform=managed
-      
-      - name: Deploy Web Container to GCR
-        uses: google-github-actions/deploy-cloudrun
+
+      - name: deploy web to google cloud run
+        uses: google-github-actions/deploy-cloudrun@v1
         with:
-          image: ${{ env.REGISTRY }}/${{ env.WEB_IMAGE_NAME }}
+          image: ${{ env.WEB_IMAGE_NAME }}
           region: ${{ env.REGION }}
           service: hermes-web
           flags: --port=8080 --allow-unauthenticated --platform=managed
+
+
+  # deploy-images-to-github:
+  #   name: Deploy to GitHub Container Registry
+  #   runs-on: ubuntu-latest
+    
+  #   permissions:
+  #     contents: read
+  #     packages: write
+    
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v3
+      
+  #     - name: Configure QEMU
+  #       uses: docker/setup-qemu-action@v2
+
+  #     - name: Configure Buildx
+  #       uses: docker/setup-buildx-action@v2
+
+  #     - name: Authenticate to GitHub Container Registry
+  #       uses: docker/login-action@v2
+  #       with:
+  #         registry: ${{ env.REGISTRY }}
+  #         username: ${{ github.repository_owner }}
+  #         password: ${{ secrets.GITHUB_TOKEN }}
+
+  #     - name: Extract Metadata for Docker
+  #       id: apimeta
+  #       uses: docker/metadata-action@v4
+  #       with:
+  #         images: ${{ env.REGISTRY }}/${{ env.API_IMAGE_NAME }}
+  #         # generate Docker tags based on the following events/attributes
+  #         # just generate "latest", and sha tags for now
+  #         tags: |
+  #           type=sha
+  #           type=raw,value=latest,enable={{is_default_branch}}
+
+  #     - name: Extract Metadata for Docker
+  #       id: webmeta
+  #       uses: docker/metadata-action@v4
+  #       with:
+  #         images: ${{ env.REGISTRY }}/${{ env.WEB_IMAGE_NAME }}
+  #         # generate Docker tags based on the following events/attributes
+  #         # just generate "latest", and sha tags for now
+  #         tags: |
+  #           type=sha
+  #           type=raw,value=latest,enable={{is_default_branch}}
+      
+  #     - name: Build and Push Api Image to GitHub Container Registry
+  #       uses: docker/build-push-action@v3
+  #       with:
+  #         context: .
+  #         file: hermes-api.dockerfile
+  #         tags: ${{ steps.apimeta.outputs.tags }}
+  #         labels: ${{ steps.apimeta.outputs.labels }}
+  #         push: true
+      
+  #     - name: Build and Push Web Image to GitHub Container Registry
+  #       uses: docker/build-push-action@v3
+  #       with:
+  #         context: .
+  #         file: hermes-web.dockerfile
+  #         tags: ${{ steps.webmeta.outputs.tags }}
+  #         labels: ${{ steps.webmeta.outputs.labels }}
+  #         push: true
+
+  # deploy-images-to-gcr:
+  #   name: Deploy images to Google Cloud Run
+  #   runs-on: ubuntu-latest
+  #   needs: deploy-images-to-github
+
+  #   steps:
+  #     - name: Authenticate to GCR
+  #       uses: google-github-actions/auth@v1
+  #       with:
+  #         credentials_json: ${{ secrets.GCP_SVC_ACCOUNT_KEY }}
+
+  #     - name: Deploy Api Container to GCR
+  #       uses: google-github-actions/deploy-cloudrun@v1
+  #       with:
+  #         image: ${{ env.REGISTRY }}/${{ env.API_IMAGE_NAME }}
+  #         region: ${{ env.REGION }}
+  #         service: hermes-api
+  #         flags: --port=8080 --allow-unauthenticated --platform=managed
+      
+  #     - name: Deploy Web Container to GCR
+  #       uses: google-github-actions/deploy-cloudrun
+  #       with:
+  #         image: ${{ env.REGISTRY }}/${{ env.WEB_IMAGE_NAME }}
+  #         region: ${{ env.REGION }}
+  #         service: hermes-web
+  #         flags: --port=8080 --allow-unauthenticated --platform=managed
