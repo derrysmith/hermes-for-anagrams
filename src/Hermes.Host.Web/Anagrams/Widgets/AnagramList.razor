@@ -2,14 +2,12 @@
 {
     foreach (var group in _groups)
     {
-        <MudCard Elevation="2" Outlined="false" Class="my-4">
-            <MudCardContent>
-                @foreach (var anagram in group)
-                {
-                    <MudChip Color="Color.Dark" Label="true" Size="Size.Medium">@anagram</MudChip>
-                }
-            </MudCardContent>
-        </MudCard>
+        <MudPaper Elevation="0" Outlined="false" Square="true" Class="py-4 my-4">
+            @foreach (var anagram in group)
+            {
+                <MudChip Color="Color.Default" Label="true" Size="Size.Medium" Variant="Variant.Outlined">@anagram</MudChip>
+            }
+        </MudPaper>
     }
 }
 
