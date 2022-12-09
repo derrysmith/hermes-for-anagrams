@@ -2,7 +2,7 @@
 {
     foreach (var group in _groups)
     {
-        <MudPaper Elevation="0" Outlined="false" Square="true" Class="py-4 my-4">
+        <MudPaper Elevation="0" Outlined="false" Square="true" Class="py-4">
             @foreach (var anagram in group)
             {
                 <MudChip Color="Color.Default" Label="true" Size="Size.Medium" Variant="Variant.Outlined">@anagram</MudChip>

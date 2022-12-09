@@ -78,7 +78,7 @@
         var min = 3;
         var max = text.Length;
 
-        var anagrams = _anagramService.GetAnagrams(text, min, max).ToArray();
+        var anagrams = _anagramService.GetAnagrams(text.ToLower(), min, max).ToArray();
 
         _anagrams = anagrams;
         _input = text.ToLower();
