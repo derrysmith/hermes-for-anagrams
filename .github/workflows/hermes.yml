@@ -10,8 +10,8 @@ env:
   WEB_SERVICE: hermes-web
   REGION: us-west1
   REGISTRY: gcr.io
-  API_IMAGE_NAME: ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/derrysmith/${{ env.API_SERVICE }}
-  WEB_IMAGE_NAME: ${{ env.REGISTRY }}/${{ secrets.GCP_PROJECT_ID }}/derrysmith/${{ env.WEB_SERVICE }}
+  API_IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/derrysmith/hermes-api
+  WEB_IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/derrysmith/hermes-web
 
 jobs:
   build-deploy-to-google:
