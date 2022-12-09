@@ -89,7 +89,7 @@ jobs:
           credentials_json: ${{ secrets.GCP_SVC_ACCOUNT_KEY }}
 
       - name: Deploy Api Container to GCR
-        uses: google-github-actions/deploy-cloudrun
+        uses: google-github-actions/deploy-cloudrun@v1
         with:
           image: ${{ env.REGISTRY }}/${{ env.API_IMAGE_NAME }}
           region: ${{ env.REGION }}
@@ -97,7 +97,7 @@ jobs:
           flags: --port=8080 --allow-unauthenticated --platform=managed
       
       - name: Deploy Web Container to GCR
-        uses: google-github-actions/deploy-cloudrun
+        uses: google-github-actions/deploy-cloudrun@v1
         with:
           image: ${{ env.REGISTRY }}/${{ env.WEB_IMAGE_NAME }}
           region: ${{ env.REGION }}
