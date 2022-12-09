@@ -55,13 +55,13 @@ jobs:
 
       - name: deploy docker images to google cloud run
         run: |
-          gcloud run deploy ${{ API_SERVICE }} \
+          gcloud run deploy ${{ env.API_SERVICE }} \
           --project ${{ secrets.GCP_PROJECT_ID }} \
           --region ${{ env.REGION }} \
           --image ${{ env.API_IMAGE_NAME }} \
           --platform managed \
           --allow-unauthenticated
-          gcloud run deploy ${{ WEB_SERVICE }} \
+          gcloud run deploy ${{ env.WEB_SERVICE }} \
           --project ${{ secrets.GCP_PROJECT_ID }} \
           --region ${{ env.REGION }} \
           --image ${{ env.WEB_IMAGE_NAME }} \
