@@ -1,0 +1,83 @@
+﻿@page "/"
+@page "/anagrams"
+
+<PageTitle>Anagrams - Hermes</PageTitle>
+
+@using Hermes.Core.Anagrams.Services
+@using Hermes.Host.Web.Anagrams.Widgets
+@inject IAnagramService _anagramService
+
+<MudContainer>
+    <div class="d-flex">
+        <MudTextField @bind-Value="@_input"
+                      Clearable="true"
+                      HelperText="enter text to retrieve anagrams"
+                      Variant="Variant.Text"
+                      OnClearButtonClick="OnSearchClear"
+                      OnKeyUp="OnSearchSubmit"/>
+        
+        <MudIconButton Color="Color.Inherit"
+                       Icon="@Icons.Material.Filled.Search"
+                       OnClick="OnSearchClick" />
+    </div>
+
+    <AnagramHead Text="@_input" Total="@_total"/>
+    <AnagramList Anagrams="@_anagrams"/>
+</MudContainer>
+
+@code {
+
+    private string? _input;
+    private int _total = 0;
+    private IEnumerable<string>? _anagrams;
+
+    private void OnSearchClear()
+    {
+        _input = string.Empty;
+        _total = 0;
+        _anagrams = null;
+    }
+
+    private void OnSearchClick()
+    {
+        if (string.IsNullOrEmpty(_input))
+        {
+            this.OnSearchClear();
+            return;
+        }
+
+        // retrieve anagrams
+        this.GetAnagrams(_input);
+    }
+
+    private void OnSearchSubmit(KeyboardEventArgs e)
+    {
+        if (e.Code != "Enter")
+            return;
+        
+        if (string.IsNullOrEmpty(_input))
+        {
+            this.OnSearchClear();
+            return;
+        }
+
+        // retrieve anagrams
+        this.GetAnagrams(_input);
+    }
+
+    private void GetAnagrams(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return;
+        
+        var min = 3;
+        var max = text.Length;
+
+        var anagrams = _anagramService.GetAnagrams(text, min, max).ToArray();
+
+        _anagrams = anagrams;
+        _input = text.ToLower();
+        _total = anagrams.Length;
+    }
+
+}

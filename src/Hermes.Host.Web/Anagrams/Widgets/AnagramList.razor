@@ -1,0 +1,34 @@
+﻿@if (_groups != null)
+{
+    foreach (var group in _groups)
+    {
+        <MudCard Elevation="2" Outlined="false" Class="my-4">
+            <MudCardContent>
+                @foreach (var anagram in group)
+                {
+                    <MudChip Color="Color.Dark" Label="true" Size="Size.Medium">@anagram</MudChip>
+                }
+            </MudCardContent>
+        </MudCard>
+    }
+}
+
+@code {
+
+    [Parameter]
+    public IEnumerable<string>? Anagrams { get; set; }
+
+    private IEnumerable<IGrouping<int, string>>? _groups;
+    
+    protected override void OnParametersSet()
+    {
+        if (this.Anagrams == null)
+        {
+            _groups = null;
+            return;
+        }
+        
+        _groups = this.Anagrams.GroupBy(s => s.Length);
+    }
+
+}

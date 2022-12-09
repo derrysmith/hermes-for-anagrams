@@ -1,0 +1,19 @@
+version: "3.7"
+
+services:
+  api:
+    build:
+      dockerfile: /hermes-api.dockerfile
+      tags:
+        - derrysmith/hermes-api:compose
+        - derrysmith/hermes-api:latest
+    ports:
+      - "1234:8080"
+  web:
+    build:
+      dockerfile: /hermes-web.dockerfile
+      tags:
+        - derrysmith/hermes-web:compose
+        - derrysmith/hermes-web:latest
+    ports:
+      - "1235:8080"

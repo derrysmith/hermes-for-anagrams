@@ -1,0 +1,80 @@
+name: Hermes Web and API Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  API_IMAGE_NAME: ${{ github.repository_owner }}/hermes-api
+  WEB_IMAGE_NAME: ${{ github.repository_owner }}/hermes-web
+  REGISTRY: ghcr.io
+
+jobs:
+  deploy-images-to-github:
+    name: Deploy to GitHub Container Registry
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      
+      - name: Configure QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Configure Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Authenticate to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Metadata for Docker
+        id: apimeta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.API_IMAGE_NAME }}
+          # generate Docker tags based on the following events/attributes
+          # just generate "latest", and sha tags for now
+          tags: |
+            type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Extract Metadata for Docker
+        id: webmeta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.WEB_IMAGE_NAME }}
+          # generate Docker tags based on the following events/attributes
+          # just generate "latest", and sha tags for now
+          tags: |
+            type=sha
+            type=raw,value=latest,enable={{is_default_branch}}
+      
+      - name: Build and Push Api Image to GitHub Container Registry
+        uses: docker/build-push-action@v3
+        with:
+          context: ./src/Hermes.Host.Api
+          tags: ${{ steps.apimeta.outputs.tags }}
+          labels: ${{ steps.apimeta.outputs.labels }}
+          push: true
+      
+      - name: Build and Push Web Image to GitHub Container Registry
+        uses: docker/build-push-action@v3
+        with:
+          context: ./src/Hermes.Host.Web
+          tags: ${{ steps.webmeta.outputs.tags }}
+          labels: ${{ steps.webmeta.outputs.labels }}
+          push: true
+
+  # deploy-images-to-gcr:
+  #   name: Deploy images to Google Cloud Run
+  #   runs-on: ubuntu-latest
+  #   needs: deploy-images-to-github

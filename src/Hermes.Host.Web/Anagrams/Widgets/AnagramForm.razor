@@ -1,0 +1,40 @@
+﻿<div class="d-flex">
+    <MudTextField @bind-Value="Text"
+                  Clearable="true"
+                  HelperText="enter text to retrieve anagrams"
+                  Variant="Variant.Text"
+                  OnKeyUp="OnSearchSubmit"/>
+    
+    <MudIconButton Color="Color.Inherit"
+                   Icon="@Icons.Material.Filled.Search"
+                   OnClick="OnSearchClick" />
+</div>
+
+@code {
+
+    [Parameter]
+    public string? Text { get; set; }
+    
+    [Parameter]
+    public EventCallback<string> OnSubmit { get; set; }
+
+    private void OnSearchClick()
+    {   
+        if (string.IsNullOrEmpty(this.Text))
+            return;
+
+        this.OnSubmit.InvokeAsync(this.Text.ToLower());
+    }
+
+    private void OnSearchSubmit(KeyboardEventArgs e)
+    {
+        if (e.Code != "Enter")
+            return;
+        
+        if (string.IsNullOrEmpty(this.Text))
+            return;
+
+        this.OnSubmit.InvokeAsync(this.Text.ToLower());
+    }
+
+}
