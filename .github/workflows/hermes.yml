@@ -83,14 +83,6 @@ jobs:
     needs: deploy-images-to-github
 
     steps:
-      # - name: Configure GCR
-      #   uses: google-github-actions/setup-gcloud
-      #   with:
-      #     project_id: ${{ secrets.GCP_PROJECT_ID }}
-      #     service_account_email: ${{ secrets.GCP_SVC_ACCOUNT_EMAIL }}
-      #     service_account_key: ${{ secrets.GCP_SVC_ACCOUNT_KEY }}
-      #     export_default_credentials: true
-      
       - name: Authenticate to GCR
         uses: google-github-actions/auth@v1
         with:
