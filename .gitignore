@@ -400,3 +400,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 .idea
 *.sln.iml
+
+# specific files
+ignore.md
